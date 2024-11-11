@@ -1,0 +1,4 @@
+ignore
+.DS_Store
+__pycache__
+exports
