@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
+np.random.seed(42)
 # ค่าเริ่มต้นของน้ำหนักและไบแอส
 weights = {
     'w1': 0.15, 'w2': 0.20, 'w3': 0.25, 'w4': 0.30,
@@ -39,7 +39,7 @@ def calculate_error(predicted, target):
     return np.mean((predicted - target) ** 2)
 
 # การอัปเดตน้ำหนักด้วย Backpropagation
-def backpropagation(weights, biases, inputs, hidden_outputs, outputs, target_outputs, learning_rate=0.5):
+def backpropagation(weights, biases, inputs, hidden_outputs, outputs, target_outputs, learning_rate=0.01):
     output_errors = target_outputs - outputs
     output_deltas = output_errors * sigmoid_derivative(outputs)
 
@@ -63,7 +63,7 @@ def backpropagation(weights, biases, inputs, hidden_outputs, outputs, target_out
     return weights, biases
 
 # การอัปเดตน้ำหนักด้วยการผสาน Hill-climbing
-def hill_climbing(weights, biases, inputs, target_outputs, iterations=1000, step_size=0.02):
+def hill_climbing(weights, biases, inputs, target_outputs, iterations=1000, step_size=0.01):
     best_weights = weights.copy()
     best_biases = biases.copy()
     best_error = float('inf')
@@ -85,8 +85,8 @@ def hill_climbing(weights, biases, inputs, target_outputs, iterations=1000, step
 
 # การฝึกด้วยการเปรียบเทียบทั้งสองวิธีและการเก็บ Error ในแต่ละ Epoch
 def train_and_compare():
-    epochs = 1000
-    learning_rate = 0.01
+    epochs = 10000
+    learning_rate = 0.02
 
     # Train with Backpropagation only
     bp_weights = weights.copy()
@@ -109,8 +109,14 @@ def train_and_compare():
         hc_errors.append(hc_error)
         hc_weights, hc_biases = backpropagation(hc_weights, hc_biases, inputs, hidden_outputs, outputs, target_outputs, learning_rate)
 
+    print("="*65)
     print("Error Backpropagation:", bp_errors[-1])
     print("Error Hill-climbing + Backpropagation:", hc_errors[-1])
+    print("="*65)
+    if bp_errors[-1] < hc_errors[-1]:
+        print("Backpropagation win!!.")
+    else:
+        print("Hill-climbing + Backpropagation win!!")
     
     # Plotting the Errors for comparison
     plt.figure(figsize=(10, 6))
