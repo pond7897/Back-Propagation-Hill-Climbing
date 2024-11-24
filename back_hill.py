@@ -83,10 +83,11 @@ def hill_climbing(weights, biases, inputs, target_outputs, iterations=1000, step
 
     return best_weights, best_biases
 
+
 # การฝึกด้วยการเปรียบเทียบทั้งสองวิธีและการเก็บ Error ในแต่ละ Epoch
 def train_and_compare():
-    epochs = 10000
-    learning_rate = 0.02
+    epochs = 1000
+    learning_rate = 0.01
 
     # Train with Backpropagation only
     bp_weights = weights.copy()
@@ -124,7 +125,7 @@ def train_and_compare():
     plt.plot(hc_errors, label="Hill-climbing + Backpropagation", color='green')
     plt.xlabel("Epochs")
     plt.ylabel("Error")
-    plt.title("Comparison of Error Reduction: Backpropagation vs Hill-climbing + Backpropagation")
+    plt.title("Backpropagation vs Hill-climbing + Backpropagation")
     plt.legend()
     plt.grid(True)
     plt.show()
