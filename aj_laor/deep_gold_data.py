@@ -49,9 +49,9 @@ def create_model(initializer):
 # 4. เปรียบเทียบ He และ Xavier
 initializers = {
     'He_normal': tf.keras.initializers.HeNormal(),
-    'He_uniform': tf.keras.initializers.HeUniform(),
+    # 'He_uniform': tf.keras.initializers.HeUniform(),
     'Xavier': tf.keras.initializers.GlorotUniform(),
-    'Zeros': tf.keras.initializers.Zeros()
+    # 'Zeros': tf.keras.initializers.Zeros()
 }
 
 histories = {}
