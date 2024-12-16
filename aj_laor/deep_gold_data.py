@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+import time  # สำหรับจับเวลา
 
 # 1. โหลดข้อมูลจากไฟล์ CSV
 data = pd.read_csv('./archive/XAU_1d_data_2004_to_2024-09-20.csv')  # เปลี่ยนชื่อไฟล์ตามที่คุณมี
@@ -49,12 +50,13 @@ def create_model(initializer):
         tf.keras.layers.Dense(1, kernel_initializer=initializer)
     ])
     model.compile(optimizer='adam', loss='mean_squared_error')
-    
     return model
 
 # 5. แบ่ง Cluster ของ Error
 initial_weights = [initialize_random_weights() for _ in range(5)]  # Random weights 5 ชุด
 errors = []
+
+start_time = time.time()  # เริ่มจับเวลา
 
 for weights in initial_weights:
     model = create_model(tf.keras.initializers.RandomNormal(mean=np.mean(weights), stddev=np.std(weights)))
@@ -78,6 +80,9 @@ average_weights = np.mean(selected_weights, axis=0)
 final_model = create_model(tf.keras.initializers.RandomNormal(mean=np.mean(average_weights), stddev=np.std(average_weights)))
 final_history = final_model.fit(X_train, y_train, epochs=50, batch_size=32, validation_data=(X_test, y_test), verbose=1)
 
+elapsed_time = time.time() - start_time  # จับเวลาสิ้นสุด
+print(f"Time taken for Cluster-based training: {elapsed_time:.2f} seconds")
+
 # 7. เปรียบเทียบ Xavier และ He Initializers
 initializers = {
     'He_normal': tf.keras.initializers.HeNormal(),
@@ -86,10 +91,15 @@ initializers = {
 
 histories = {}
 
+start_time = time.time()  # เริ่มจับเวลา
+
 for name, initializer in initializers.items():
     model = create_model(initializer)
     history = model.fit(X_train, y_train, epochs=50, batch_size=32, validation_data=(X_test, y_test), verbose=0)
     histories[name] = history
+
+elapsed_time = time.time() - start_time  # จับเวลาสิ้นสุด
+print(f"Time taken for Xavier and He training: {elapsed_time:.2f} seconds")
 
 # แสดงกราฟเปรียบเทียบ Loss
 plt.figure(figsize=(12, 6))
